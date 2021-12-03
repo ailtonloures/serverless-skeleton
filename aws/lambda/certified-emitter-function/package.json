@@ -1,0 +1,8 @@
+{
+  "name": "certified-emitter-function",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "aws-sdk": "^2.1042.0"
+  }
+}
