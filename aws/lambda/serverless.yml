@@ -12,9 +12,9 @@ provider:
 
 functions:
   certified-emitter-function:
-    name: ${sls:stage}-certified-emitter-function
+    name: certified-emitter-function
     description: Função responsável pela emissão dos certificados
-    handler: ./certified-emitter-function/index.handler
+    handler: ./certified-emitter-function/src/index.handler
     timeout: 30
     memorySize: 128
     runtime: nodejs14.x
