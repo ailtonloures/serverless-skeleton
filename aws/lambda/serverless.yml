@@ -1,11 +1,13 @@
 service: certified-emitter
 
-frameworkVersion: '2 || 3'
+frameworkVersion: '2'
+configValidationMode: off
 
 provider:
   name: aws
   region: ${opt:region, 'us-east-1'}
-  stage: ${opt:stage, 'dev'}  
+  stage: ${opt:stage, 'dev'}
+  profile: ailtonloures_root
   lambdaHashingVersion: 20201221
   deploymentBucket:
     name:	certified-emitter-bucket
@@ -16,6 +18,10 @@ provider:
         - dynamodb:*
       Resource:
         - "arn:aws:s3:::certified-emitter-bucket/*"
+
+package:
+  excludeDevDependencies: true
+  individually: true 
 
 functions:
   certified-emitter-function:
@@ -45,8 +51,8 @@ constructs:
     worker:
       name: ${sls:stage}-certified-emitter-queue
       handler: ./lambda/certified-emitter-queue/src/index.handler
-      memorySize: 128
       timeout: 10
+      memorySize: 128
       maxRetries: 3
 
 custom:
