@@ -1,9 +1,10 @@
 'use strict';
 
-const { S3, DynamoDB } = require('aws-sdk');
+const { DynamoDB, SQS, S3 } = require('aws-sdk');
 
 exports.handler = async (event) => {
     return {
-        event
+        event,
+        env: process.env
     };
 };

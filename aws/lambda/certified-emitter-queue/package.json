@@ -1,5 +1,5 @@
 {
-  "name": "certified-emitter-function",
+  "name": "certified-emitter-queue",
   "license": "MIT",
   "devDependencies": {
     "aws-sdk": "^2.1042.0"

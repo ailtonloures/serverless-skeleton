@@ -4,18 +4,57 @@ frameworkVersion: '2 || 3'
 
 provider:
   name: aws
-  runtime: nodejs14.x
-  region: us-east-1
-  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'us-east-1'}
+  stage: ${opt:stage, 'dev'}  
   lambdaHashingVersion: 20201221
   deploymentBucket:
     name:	certified-emitter-bucket
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:*
+        - dynamodb:*
+      Resource:
+        - "arn:aws:s3:::certified-emitter-bucket/*"
 
 functions:
   certified-emitter-function:
     name: ${sls:stage}-certified-emitter-function
     description: Função responsável pela emissão dos certificados
-    handler: ./certified-emitter-function/src/index.handler
-    timeout: 30
-    memorySize: 128
+    handler: ./lambda/certified-emitter-function/src/index.handler
     runtime: nodejs14.x
+    memorySize: 128
+    timeout: 10
+    environment:
+      key: ${self:custom.environment.${sls:stage}.key}
+      queueUrl: ${construct:certified-emitter-queue.queueUrl}
+    events:
+      - http:
+          path: certified-emitter
+          method: post
+          async: true
+          cors:
+            origin: 
+              - '*'
+            headers:
+              - Content-Type
+
+constructs:
+  certified-emitter-queue:
+    type: queue
+    worker:
+      name: ${sls:stage}-certified-emitter-queue
+      handler: ./lambda/certified-emitter-queue/src/index.handler
+      memorySize: 128
+      timeout: 10
+      maxRetries: 3
+
+custom:
+  environment:
+    dev:
+      key: 1234567890
+    prod:
+      key: production
+
+plugins:
+  - serverless-lift
