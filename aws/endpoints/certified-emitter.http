@@ -1,0 +1,9 @@
+@url = https://iaspmzdow3.execute-api.us-east-1.amazonaws.com
+@stage = dev
+
+POST {{ url }}/{{ stage }}/certified-emitter
+Content-Type: application/json
+
+{
+    
+}
