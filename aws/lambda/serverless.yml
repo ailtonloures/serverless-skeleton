@@ -10,7 +10,7 @@ provider:
   profile: ailtonloures_root
   lambdaHashingVersion: 20201221
   deploymentBucket:
-    name:	certified-emitter-bucket
+    name: certified-emitter-bucket
   iamRoleStatements:
     - Effect: Allow
       Action:
