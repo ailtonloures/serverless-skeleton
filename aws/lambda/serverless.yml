@@ -50,6 +50,7 @@ constructs:
     type: queue
     worker:
       name: ${sls:stage}-certified-emitter-queue
+      description: Função responsável pela fila de emissão dos certificados
       handler: ./lambda/certified-emitter-queue/src/index.handler
       timeout: 10
       memorySize: 128
