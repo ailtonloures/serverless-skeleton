@@ -1,0 +1,7 @@
+certified-emitter-queue:
+    type: queue
+    worker:
+      name: ${sls:stage}-certified-emitter-queue
+      description: Função responsável pela fila de emissão dos certificados
+      handler: ${self:custom.projectDir.lambda}/endpoints/certified-emitter-queue.handler
+      maxRetries: 3

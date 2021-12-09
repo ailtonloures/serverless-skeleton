@@ -1,7 +1,0 @@
-{
-  "name": "certified-emitter-function",
-  "license": "MIT",
-  "devDependencies": {
-    "aws-sdk": "^2.1042.0"
-  }
-}

@@ -1,0 +1,49 @@
+service: certified-emitter
+
+frameworkVersion: '2'
+configValidationMode: off
+
+provider:
+  name: aws
+  region: ${opt:region, 'us-east-1'}
+  stage: ${opt:stage, 'dev'}
+  runtime: nodejs14.x
+  memorySize: 128
+  timeout: 10
+  profile: ailtonloures_root
+  lambdaHashingVersion: 20201221
+  versionFunctions: false
+  deploymentBucket:
+    name: certified-emitter-bucket
+    
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:*
+        - dynamodb:*
+      Resource:
+        - "arn:aws:s3:::certified-emitter-bucket/*"
+
+  package:
+    individually: true 
+    excludeDevDependencies: true
+    patterns:
+      - ${self:custom.projectDir.lambda}/**
+
+  environment:
+    ${file(${self:custom.projectDir.env}/${sls:stage}.yml)}
+
+functions: 
+  ${file(${self:custom.projectDir.lambda}/functions.yml)}
+
+constructs:
+  ${file(${self:custom.projectDir.lambda}/queue.yml)}
+
+custom:
+  projectDir: 
+    aws: ./aws
+    lambda: ./aws/lambda
+    env: ./aws/env
+
+plugins:
+  - serverless-lift

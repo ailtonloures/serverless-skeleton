@@ -1,0 +1,16 @@
+certified-emitter-function:
+    name: ${sls:stage}-certified-emitter-function
+    description: Função responsável pela emissão dos certificados
+    handler: ${self:custom.projectDir.lambda}/endpoints/certified-emitter-function.handler
+    environment:
+      QUEUE_URL: ${construct:certified-emitter-queue.queueUrl}
+    events:
+      - http: 
+          path: certified-emitter
+          method: post
+          async: true
+          cors:
+            origin: 
+              - '*'
+            headers:
+              - Content-Type

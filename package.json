@@ -1,0 +1,16 @@
+{
+    "name": "certified-emitter",
+    "description": "Serverless AWS project",
+    "version": "1",
+    "license": "MIT",
+    "dependencies": {},
+    "devDependencies": {
+        "aws-sdk": "^2.1045.0",
+        "serverless": "^2.68.0",
+        "serverless-lift": "^1.11.0"
+    },
+    "scripts": {
+        "deploy": "serverless deploy --verbose",
+        "deploy-function": "serverless deploy function -f"
+    }
+}
