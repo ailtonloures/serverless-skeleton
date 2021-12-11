@@ -1,1 +1,6 @@
 KEY: 1234567890
+
+# S3
+BUCKET_NAME: certified-emitter-bucket
+TEMPLATES_PATH: templates
+PUBLIC_PATH: public

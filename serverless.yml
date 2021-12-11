@@ -24,15 +24,15 @@ provider:
       Resource:
         - "arn:aws:s3:::certified-emitter-bucket/*"
 
-  package:
-    individually: true 
-    excludeDevDependencies: true
-    patterns:
-      - ${self:custom.projectDir.lambda}/**
-
   environment:
     ${file(${self:custom.projectDir.env}/${sls:stage}.yml)}
 
+package:
+  individually: true 
+  excludeDevDependencies: true
+  patterns:
+    ${self:custom.projectDir.lambda}/**
+  
 functions: 
   ${file(${self:custom.projectDir.lambda}/functions.yml)}
 
@@ -47,3 +47,4 @@ custom:
 
 plugins:
   - serverless-lift
+  - serverless-webpack
