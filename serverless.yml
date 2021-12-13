@@ -6,15 +6,13 @@ configValidationMode: off
 provider:
   name: aws
   region: ${opt:region, 'us-east-1'}
-  stage: ${opt:stage, 'dev'}
+  stage: ${opt:stage, 'test'}
   runtime: nodejs14.x
   memorySize: 128
   timeout: 10
   profile: ailtonloures_root
   lambdaHashingVersion: 20201221
   versionFunctions: false
-  deploymentBucket:
-    name: certified-emitter-bucket
     
   iamRoleStatements:
     - Effect: Allow
@@ -39,12 +37,39 @@ functions:
 constructs:
   ${file(${self:custom.projectDir.lambda}/queue.yml)}
 
+resources:
+  Resources:
+    # Buckets
+    CertifiedEmitterBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: certified-emitter-bucket
+    # Tables
+    UserTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${sls:stage}-user
+        AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+
 custom:
   projectDir: 
     aws: ./aws
     lambda: ./aws/lambda
     env: ./aws/env
+  webpack:
+    webpackConfig: 'webpack.config.js'
+    includeModules: false
+    packager: 'yarn'
+  serverless-offline:
+    useDocker: true
 
 plugins:
   - serverless-lift
   - serverless-webpack
+  - serverless-offline

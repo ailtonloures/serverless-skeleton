@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  serverless:
+    build: .
+    volumes:
+      - "./:/app"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - sqs
+      - dynamo
+    networks:
+      - local
+
+  dynamo:
+    image: amazon/dynamodb-local:latest
+    ports:
+      - "8000:8000"
+    networks:
+      - local
+
+  sqs:
+    image: s12v/elasticmq:latest
+    ports:
+      - "9324:9324"
+    networks:
+      - local
+
+networks:
+  local:
+    driver: bridge

@@ -6,4 +6,4 @@ TEMPLATES_PATH: templates
 PUBLIC_PATH: public
 
 # DynamoDB
-USER_TABLE: dev-user
+USER_TABLE: test-user
