@@ -1,6 +1,6 @@
 'use strict'
 
-const { S3 } = require('aws-sdk');
+const S3 = require('aws-sdk/clients/s3');
 
 const S3Client = {
     // Props
@@ -21,7 +21,7 @@ const S3Client = {
 
         return object;
     },
-    async put({ fileName, data, contentType = 'application/pdf' }) {
+    async put({ fileName, data, contentType }) {
         const object = await this.client.putObject({
             Bucket: this.bucket,
             Key: fileName,

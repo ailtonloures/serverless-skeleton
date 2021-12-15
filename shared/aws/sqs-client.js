@@ -1,6 +1,6 @@
 'use strict'
 
-const { SQS } = require('aws-sdk');
+const SQS = require('aws-sdk/clients/sqs');
 
 const SQSClient = {
     // Props

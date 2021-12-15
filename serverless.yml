@@ -1,41 +1,28 @@
-service: certified-emitter
+service: service-name
 
-frameworkVersion: '2'
+frameworkVersion: '2 || 3'
 configValidationMode: off
 
 provider:
   name: aws
   region: ${opt:region, 'us-east-1'}
-  stage: ${opt:stage, 'test'}
+  stage: ${opt:stage, 'local'}
   runtime: nodejs14.x
   memorySize: 128
   timeout: 10
-  profile: ailtonloures_root
+  profile: profile-name
   lambdaHashingVersion: 20201221
   versionFunctions: false
-    
-  iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - s3:*
-        - dynamodb:*
-      Resource:
-        - "arn:aws:s3:::certified-emitter-bucket/*"
 
   environment:
-    ${file(${self:custom.projectDir.env}/${sls:stage}.yml)}
+    ${file(${self:custom.projectDir.configs}/${sls:stage}.yml)}
 
 package:
   individually: true 
   excludeDevDependencies: true
-  patterns:
-    ${self:custom.projectDir.lambda}/**
   
 functions: 
-  ${file(${self:custom.projectDir.lambda}/functions.yml)}
-
-constructs:
-  ${file(${self:custom.projectDir.lambda}/queue.yml)}
+  ${file(${self:custom.projectDir.modules}/functions.yml)}
 
 resources:
   Resources:
@@ -43,33 +30,28 @@ resources:
     CertifiedEmitterBucket:
       Type: AWS::S3::Bucket
       Properties:
-        BucketName: certified-emitter-bucket
-    # Tables
-    UserTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: ${sls:stage}-user
-        AttributeDefinitions:
-          - AttributeName: userId
-            AttributeType: S
-        KeySchema:
-          - AttributeName: userId
-            KeyType: HASH
-        BillingMode: PAY_PER_REQUEST
+        BucketName: ${self:custom.buckets.main}
 
 custom:
+  # Buckets
+  buckets: 
+    main: ${sls:stage}-bucket-name
+  # Project Dir
   projectDir: 
-    aws: ./aws
-    lambda: ./aws/lambda
-    env: ./aws/env
+    modules: ./modules
+    configs: ./configs
+  # Webpack config
   webpack:
     webpackConfig: 'webpack.config.js'
     includeModules: false
     packager: 'yarn'
-  serverless-offline:
-    useDocker: true
+  # Localstack config
+  localstack:
+    debug: true
+    stages:
+      - local
+    endpointFile: ./configs/endpoints.json
 
 plugins:
-  - serverless-lift
   - serverless-webpack
-  - serverless-offline
+  - serverless-localstack
